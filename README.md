@@ -1,1 +1,187 @@
-Teste Técnico destinado à vaga de estágio da SaguiTech.
+# Teste-Tecnico-Saguitech
+
+Link para o teste:
+
+https://teste-tecnico-desafio-target.vercel.app/
+
+![Imagem de Exemplo](Teste%20Tecnico%20-%20Target/assets/teste-screenshot.png)
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emissão de NFS-e</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+        }
+        h1 {
+            padding: 15px 20px;
+            text-align: center;
+            max-width: 600px;
+            background: linear-gradient(to right, #f8b300, #ff6f00, #8aeb6c);
+            margin: 0px auto;
+            color: #FFF;
+            border-radius: 5px 5px 0px 0px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 img {
+            margin-left: 5px;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #EEE;
+            padding: 20px;
+            border-radius: 0px 0px 5px 5px;
+        }
+        .form-container input, .form-container select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .form-container button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #FF7900;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: 600;
+            transition: ease 0.3s;
+        }
+        .form-container button:hover {
+            background-color: #e05c00;
+            scale: 1.01;
+        }
+        .result-container {
+            max-width: 600px;
+            margin: 30px auto 0px;
+            background-color: #e0f7fa;
+            padding: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>SaguiControl <img src="assets/icons/monkey-face-svgrepo-com.svg" alt=""></h1>
+
+    <div class="form-container">
+        <h2>Informações da Venda</h2>
+        <label for="valorVenda">Valor da Venda (R$):</label>
+        <input type="number" id="valorVenda" required>
+
+        <label for="itensVenda">Itens Vendidos:</label>
+        <input type="text" id="itensVenda" required>
+
+        <label for="irpf">Porcentagem de Imposto (IRPF):</label>
+        <input type="number" id="irpf" required>
+
+        <label for="pis">Porcentagem de Imposto (PIS):</label>
+        <input type="number" id="pis" required>
+
+        <label for="cofins">Porcentagem de Imposto (COFINS):</label>
+        <input type="number" id="cofins" required>
+
+        <label for="inss">Porcentagem de Imposto (INSS):</label>
+        <input type="number" id="inss" required>
+
+        <label for="issqn">Porcentagem de Imposto (ISSQN):</label>
+        <input type="number" id="issqn" required>
+
+        <button onclick="gerarNotaFiscal()">Gerar Nota Fiscal</button>
+    </div>
+
+    <div class="result-container" id="resultadoNotaFiscal" style="display: none;">
+        <h2>Nota Fiscal Gerada</h2>
+        <p><strong>Valor da Venda:</strong> R$ <span id="valorVendaResultado"></span></p>
+        <p><strong>Itens Vendidos:</strong> <span id="itensVendaResultado"></span></p>
+        <p><strong>Imposto IRPF:</strong> R$ <span id="irpfResultado"></span></p>
+        <p><strong>Imposto PIS:</strong> R$ <span id="pisResultado"></span></p>
+        <p><strong>Imposto COFINS:</strong> R$ <span id="cofinsResultado"></span></p>
+        <p><strong>Imposto INSS:</strong> R$ <span id="inssResultado"></span></p>
+        <p><strong>Imposto ISSQN:</strong> R$ <span id="issqnResultado"></span></p>
+        <p><strong>Total de Impostos:</strong> R$ <span id="totalImpostosResultado"></span></p>
+        <p><strong>Total da Nota Fiscal:</strong> R$ <span id="totalNotaFiscalResultado"></span></p>
+    </div>
+```
+```javascript
+<script>
+        function gerarNotaFiscal() {
+            // Leitura dos dados de entrada
+            let valorVenda = document.getElementById("valorVenda").value;
+            let itensVenda = document.getElementById("itensVenda").value;
+            let irpfPorcentagem = document.getElementById("irpf").value;
+            let pisPorcentagem = document.getElementById("pis").value;
+            let cofinsPorcentagem = document.getElementById("cofins").value;
+            let inssPorcentagem = document.getElementById("inss").value;
+            let issqnPorcentagem = document.getElementById("issqn").value;
+    
+            // Validação dos campos obrigatórios
+            if (!valorVenda || !itensVenda || !irpfPorcentagem || !pisPorcentagem || !cofinsPorcentagem || !inssPorcentagem || !issqnPorcentagem) {
+                alert("Todos os campos são obrigatórios!");
+                return; // Impede a execução da função se algum campo estiver vazio
+            }
+    
+            // Converte os valores para float
+            valorVenda = parseFloat(valorVenda);
+            irpfPorcentagem = parseFloat(irpfPorcentagem);
+            pisPorcentagem = parseFloat(pisPorcentagem);
+            cofinsPorcentagem = parseFloat(cofinsPorcentagem);
+            inssPorcentagem = parseFloat(inssPorcentagem);
+            issqnPorcentagem = parseFloat(issqnPorcentagem);
+    
+            // Cálculo dos impostos
+            let irpf = (irpfPorcentagem / 100) * valorVenda;
+            let pis = (pisPorcentagem / 100) * valorVenda;
+            let cofins = (cofinsPorcentagem / 100) * valorVenda;
+            let inss = (inssPorcentagem / 100) * valorVenda;
+            let issqn = (issqnPorcentagem / 100) * valorVenda;
+    
+            // Cálculo do total de impostos
+            let totalImpostos = irpf + pis + cofins + inss + issqn;
+    
+            // Cálculo do total da nota fiscal (valor da venda - total de impostos)
+            let totalNotaFiscal = valorVenda - totalImpostos;
+    
+            // Função para formatar valores para o padrão brasileiro
+            function formatarParaReal(valor) {
+                return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
+    
+            // Exibição dos resultados na tela
+            document.getElementById("valorVendaResultado").innerText = formatarParaReal(valorVenda);
+            document.getElementById("itensVendaResultado").innerText = itensVenda;
+    
+            // Exibir cálculo detalhado dos impostos
+            document.getElementById("irpfResultado").innerHTML = `${formatarParaReal(irpf)} (Valor da venda * ${irpfPorcentagem}%)`;
+            document.getElementById("pisResultado").innerHTML = `${formatarParaReal(pis)} (Valor da venda * ${pisPorcentagem}%)`;
+            document.getElementById("cofinsResultado").innerHTML = `${formatarParaReal(cofins)} (Valor da venda * ${cofinsPorcentagem}%)`;
+            document.getElementById("inssResultado").innerHTML = `${formatarParaReal(inss)} (Valor da venda * ${inssPorcentagem}%)`;
+            document.getElementById("issqnResultado").innerHTML = `${formatarParaReal(issqn)} (Valor da venda * ${issqnPorcentagem}%)`;
+    
+            document.getElementById("totalImpostosResultado").innerHTML = `${formatarParaReal(totalImpostos)} (Soma de todos os impostos)`;
+            document.getElementById("totalNotaFiscalResultado").innerText = formatarParaReal(totalNotaFiscal);
+    
+            // Exibir a seção de resultados
+            document.getElementById("resultadoNotaFiscal").style.display = "block";
+        }
+    </script>
+```
+```html
+</body>
+</html>
+```
